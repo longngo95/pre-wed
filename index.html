@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Trân trọng kính mời - Nhung & Long</title>
+    <meta name="description" content="Thiệp mời đám cưới của Nhung & Long">
+    <link rel="icon" href="assets/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Great+Vibes&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #b8860b;
+            --gold-light: #d4a843;
+            --cream: #faf6f0;
+            --dark: #2c2c2c;
+            --text: #4a4a4a;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+            background: var(--cream);
+            overflow-x: hidden;
+            color: var(--text);
+        }
+
+        /* ========== BACKDROP ========== */
+        #backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('assets/backdrop.jpg');
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+        }
+
+        /* ==========================================================
+           ANIMATION STAGE
+           3D-perspective container. All 5 layers composited here.
+           ========================================================== */
+        #stage {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1200px;
+            transition: opacity 0.8s ease;
+        }
+
+        #stage.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Envelope group — positions all 5 layers as one unit */
+        .envelope-group {
+            position: relative;
+            width: min(75vw, 420px);
+            aspect-ratio: 600 / 440;
+            /* Landscape envelope */
+            transform-style: preserve-3d;
+            transition: transform 1s ease, opacity 0.8s ease;
+        }
+
+        .envelope-group.settle {
+            transform: translateY(15vh) scale(0.8);
+            opacity: 0;
+        }
+
+        /* ====== LAYER 1: Envelope Back (the pocket) ====== */
+        .layer-back {
+            position: absolute;
+            inset: 0;
+            background-color: #d6c9b0;
+            /* Visible pocket color when card slides out */
+            background-image: url('assets/envelope.jpg');
+            background-size: cover;
+            border-radius: 6px;
+            z-index: 10;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12), inset 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        /* ====== LAYER 2: Liner (interior wallpaper of envelope back) ====== */
+        .layer-liner {
+            position: absolute;
+            /* Inset it 10px so the envelope paper 'frame' is visible around the gold */
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            background-image: url('assets/liner.jpg');
+            background-size: cover;
+            background-position: center;
+            z-index: 20;
+            border-radius: 4px;
+        }
+
+        /* ====== LAYER 3: The Card ====== */
+        .layer-card {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            /* Card width matched perfectly to the static card to prevent jumping */
+            width: min(80vw, 380px);
+            aspect-ratio: 366 / 512;
+            transform-origin: center center;
+            z-index: 30;
+            /* Start: inside envelope, scaled to fit, rotated -90deg (landscape inside) */
+            transform: translate(-50%, -50%) scale(0.55) rotate(-90deg);
+        }
+
+        .layer-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            /* Tight shadow while inside */
+            transition: box-shadow 2.2s ease-out;
+        }
+
+        /* Shadow grows as card moves toward viewer */
+        .layer-card.animate img {
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            /* Deep, soft shadow when out */
+        }
+
+        /* Card animation: slide out, rotate, scale, come forward */
+        .layer-card.animate {
+            animation: cardSlideOut 3.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes cardSlideOut {
+            0% {
+                transform: translate(-50%, -50%) scale(0.55) rotate(-90deg) translateZ(0px);
+            }
+
+            /* Move the card FORWARD (translateZ) as it clears the pocket to avoid clipping */
+            45% {
+                transform: translate(-50%, -125%) scale(0.7) rotate(0deg) translateZ(50px);
+            }
+
+            100% {
+                /* Final position matched to scale 1.0 to match the document card */
+                transform: translate(-50%, -50%) scale(1) rotate(0deg) translateZ(120px);
+            }
+        }
+
+        /* ====== LAYER 4: Envelope Front (covers the card) ====== */
+        .layer-front {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 75%;
+            /* Taller pocket */
+            background-image: url('assets/envelope.jpg');
+            background-size: cover;
+            z-index: 45;
+            /* Must be above the card (30) */
+            clip-path: polygon(0% 0%, 15% 10%, 85% 10%, 100% 0%, 100% 100%, 0% 100%);
+        }
+
+        /* ====== LAYER 5: Envelope Flap (top, folds down) ====== */
+        .layer-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60%;
+            /* Reaches further down than the pocket start */
+            transform-origin: top center;
+            z-index: 50;
+            /* Topmost layer when closed */
+        }
+
+        .layer-flap.animate {
+            animation: flapOpen 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes flapOpen {
+            0% {
+                transform: rotateX(0deg);
+                z-index: 50;
+            }
+
+            49% {
+                transform: rotateX(-89deg);
+                z-index: 50;
+            }
+
+            50% {
+                transform: rotateX(-90deg);
+                z-index: 5;
+            }
+
+            /* Z-swap at 90deg */
+            100% {
+                transform: rotateX(-180deg);
+                z-index: 5;
+            }
+        }
+
+        .flap-outer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('New-References/assets.ppassets.com/p-pwaFlMClk4oQdNc6bHFiQ/flyer/paper_static/base');
+            background-size: cover;
+            /* Trapezoid shape: starts wide, ends narrower but not a point */
+            clip-path: polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%);
+            backface-visibility: hidden;
+            /* Simulates paper thickness/lighting */
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        /* Inner face of flap (gold liner, visible when flap is past 90deg) */
+        .flap-inner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            transform: rotateX(180deg);
+        }
+
+        .flap-inner-paper {
+            position: absolute;
+            inset: 0;
+            background-image: url('New-References/assets.ppassets.com/p-pwaFlMClk4oQdNc6bHFiQ/flyer/paper_static/base');
+            background-size: cover;
+            clip-path: polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%);
+        }
+
+        .flap-inner-gold {
+            position: absolute;
+            top: 4%;
+            left: 5%;
+            right: 5%;
+            bottom: 8%;
+            /* Same image + size as .layer-liner for seamless continuity */
+            background-image: url('New-References/assets.ppassets.com/p-4CR7NtpPlVIOqlZO4z5iym/flyer/liner_static/jpeg_large');
+            background-size: cover;
+            background-position: center;
+            clip-path: polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%);
+        }
+
+        /* ==========================================================
+           SCROLLABLE PAGE (shown after animation)
+           Card + flip + event info + RSVP in normal document flow.
+           ========================================================== */
+        #page {
+            position: relative;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 20px 60px;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            pointer-events: none;
+        }
+
+        #page.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .card-container {
+            width: min(80vw, 380px);
+            perspective: 1500px;
+            margin-bottom: 20px;
+        }
+
+        .card-flipper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 366 / 512;
+            transition: transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+            transform-style: preserve-3d;
+        }
+
+        .card-flipper.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+            background: #fff;
+        }
+
+        .card-face img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .card-back-face {
+            transform: rotateY(180deg);
+        }
+
+        .flip-btn {
+            margin-bottom: 30px;
+            padding: 11px 28px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1.5px solid var(--gold);
+            color: var(--gold);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            border-radius: 30px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .flip-btn:hover {
+            background: var(--gold);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .event-info {
+            text-align: center;
+            max-width: 420px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 35px 28px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(184, 134, 11, 0.15);
+        }
+
+        .event-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 30px;
+            color: var(--gold);
+            margin-bottom: 22px;
+        }
+
+        .event-section {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(184, 134, 11, 0.15);
+        }
+
+        .event-section:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .event-label {
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .event-value {
+            font-size: 19px;
+            font-weight: 400;
+            color: var(--dark);
+            line-height: 1.5;
+        }
+
+        .event-value.sub {
+            font-size: 14px;
+            color: var(--text);
+            margin-top: 4px;
+        }
+
+        .rsvp-section {
+            margin-top: 30px;
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .rsvp-trigger {
+            flex: 1;
+            padding: 14px 10px;
+            border: 2px solid var(--gold);
+            background: transparent;
+            color: var(--gold);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .rsvp-trigger:hover {
+            background: var(--gold);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(184, 134, 11, 0.3);
+        }
+
+        .rsvp-trigger.decline {
+            border-color: #999;
+            color: #777;
+        }
+
+        .rsvp-trigger.decline:hover {
+            background: #999;
+            color: #fff;
+        }
+
+        /* ========== CONTROLS ========== */
+        .controls {
+            position: fixed;
+            left: 20px;
+            bottom: 30px;
+            z-index: 200;
+        }
+
+        .ctrl-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            font-size: 20px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .ctrl-btn:hover {
+            background: var(--gold);
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        /* ========== RSVP MODAL ========== */
+        #rsvp-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(6px);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #rsvp-modal.visible {
+            display: flex;
+        }
+
+        #rsvp-content {
+            background: #fff;
+            padding: 35px 28px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            font-family: 'Cormorant Garamond', serif;
+            animation: modalIn 0.4s ease;
+        }
+
+        @keyframes modalIn {
+            from {
+                transform: scale(0.9) translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        #rsvp-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 28px;
+            color: var(--gold);
+            margin-bottom: 22px;
+        }
+
+        #rsvp-input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 22px;
+            border: 1.5px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+
+        #rsvp-input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .rsvp-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .rsvp-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: inherit;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+
+        .btn-cancel {
+            background: #f5f5f5;
+            color: #777;
+        }
+
+        .btn-cancel:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-confirm {
+            background: var(--gold);
+            color: #fff;
+        }
+
+        .btn-confirm:hover {
+            background: var(--gold-light);
+        }
+
+        #rsvp-loading {
+            display: none;
+            margin: 25px 0;
+            font-size: 18px;
+            color: var(--gold);
+        }
+
+        #rsvp-success-area {
+            display: none;
+        }
+
+        #rsvp-success-msg {
+            font-size: 19px;
+            line-height: 1.6;
+            color: var(--dark);
+            margin-bottom: 22px;
+        }
+
+        /* ========== JOURNEY MAP & VIDEO ========== */
+        .journey-section {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            max-width: 420px;
+            /* Matched width consistently to event-info */
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(184, 134, 11, 0.15);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 30px auto 10px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .journey-media {
+            flex: 1.1;
+            /* Grants the video slice slightly more horizontal priority */
+        }
+
+        .journey-video {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            background: #000;
+        }
+
+        .map-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .korea-map {
+            width: 100%;
+            max-width: 150px;
+            height: auto;
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.05));
+            margin-bottom: 15px;
+        }
+
+        .journey-stats {
+            text-align: center;
+        }
+
+        .stat-date {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--gold);
+            margin-bottom: 5px;
+        }
+
+        .distance-counter {
+            font-size: 14px;
+            line-height: 1.4;
+            color: var(--text);
+            font-style: italic;
+        }
+
+        .distance-counter span {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--gold);
+            font-style: normal;
+        }
+
+        /* Card Text Overlay */
+        .card-back-text {
+            position: absolute;
+            font-family: 'Great Vibes', cursive;
+            font-size: 30px;
+            color: var(--gold);
+            text-align: center;
+            width: 90%;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.4);
+            padding: 10px 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(4px);
+        }
+
+        /* Custom Textarea */
+        #rsvp-message {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 22px;
+            border: 1.5px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            text-align: center;
+            transition: border-color 0.3s;
+            resize: none;
+        }
+
+        #rsvp-message:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .address-copyable {
+            cursor: pointer;
+            transition: color 0.2s, transform 0.2s;
+            position: relative;
+            display: inline-block;
+        }
+
+        .address-copyable:active {
+            color: var(--gold);
+            transform: scale(0.98);
+        }
+
+        @media (max-width: 480px) {
+            .envelope-group {
+                width: min(82vw, 400px);
+            }
+
+            .card-back-text {
+                font-size: 24px;
+            }
+
+            .journey-section {
+                flex-direction: column;
+            }
+
+            .korea-map {
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="backdrop"></div>
+
+    <!-- ============ ANIMATION STAGE ============ -->
+    <div id="stage">
+        <div class="envelope-group" id="envelope-group">
+            <!-- Layer 1: Envelope Back -->
+            <div class="layer-back"></div>
+            <!-- Layer 2: Liner -->
+            <div class="layer-liner"></div>
+            <!-- Layer 3: The Card -->
+            <div class="layer-card" id="layer-card">
+                <img src="New-References/card_front.png" alt="Card">
+            </div>
+            <!-- Layer 4: Envelope Front -->
+            <div class="layer-front"></div>
+            <!-- Layer 5: Flap -->
+            <div class="layer-flap" id="layer-flap">
+                <div class="flap-outer"></div>
+                <div class="flap-inner">
+                    <div class="flap-inner-paper"></div>
+                    <div class="flap-inner-gold"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ SCROLLABLE PAGE ============ -->
+    <div id="page">
+        <div class="card-container">
+            <div class="card-flipper" id="card-flipper">
+                <div class="card-face"><img src="New-References/card_front.png" alt="Front"></div>
+                <div class="card-face card-back-face">
+                    <img src="assets/card_back.jpg" alt="Back">
+                    <div class="card-back-text">Mọi yêu thương xin gửi về Bii</div>
+                </div>
+            </div>
+        </div>
+        <button class="flip-btn" id="btn-flip">↻ Lật mặt sau</button>
+        <div class="event-info">
+            <div class="event-title">Trân trọng kính mời</div>
+            <div class="event-section">
+                <div class="event-label">Thời gian</div>
+                <div class="event-value">11 giờ trưa, Chủ Nhật, Ngày 17 Tháng 5</div>
+            </div>
+            <div class="event-section">
+                <div class="event-label">Địa Chỉ</div>
+                <div class="event-value">Quán Phố Cổ</div>
+                <div class="event-value sub address-copyable" id="address-text" title="Nhấn để copy">전북특별자치도 전주시 덕진구
+                    명륜4길 10-4 2층</div>
+            </div>
+        </div>
+
+        <!-- JOURNEY SECTION (Video + Map) -->
+        <div class="journey-section">
+            <div class="journey-media">
+                <video src="assets/Video_1.mp4" autoplay loop muted playsinline class="journey-video"></video>
+            </div>
+            <div class="map-container">
+                <svg class="korea-map" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
+                    <!-- South Korea Coastline detailed polygon -->
+                    <polygon
+                        points="50,10 70,5 90,15 100,20 120,30 140,50 160,80 170,110 180,150 185,190 170,220 160,250 140,270 120,285 100,280 80,290 60,280 50,260 40,240 30,200 40,160 35,130 50,80"
+                        fill="#f0edd1" stroke="rgba(184, 134, 11, 0.4)" stroke-width="2" />
+                    <!-- Jeju Island -->
+                    <circle cx="60" cy="270" r="10" fill="#f0edd1" stroke="rgba(184, 134, 11, 0.4)" stroke-width="2" />
+                    <!-- Route -->
+                    <path id="route-path" d="M75,60 Q110,120 90,180" fill="none" stroke="#ddd" stroke-width="3"
+                        stroke-dasharray="5,5" />
+                    <path id="active-route" d="M75,60 Q110,120 90,180" fill="none" stroke="var(--gold)" stroke-width="3"
+                        stroke-dasharray="150" stroke-dashoffset="150" />
+                    <!-- Points -->
+                    <circle cx="75" cy="60" r="6" fill="#fff" stroke="var(--gold)" stroke-width="2" />
+                    <circle cx="90" cy="180" r="6" fill="#fff" stroke="var(--gold)" stroke-width="2" />
+                    <!-- Tags -->
+                    <text x="55" y="50" font-family="sans-serif" font-size="11" fill="var(--dark)" font-weight="bold">서울
+                        (Seoul)</text>
+                    <text x="100" y="195" font-family="sans-serif" font-size="11" fill="var(--dark)"
+                        font-weight="bold">전주 (Jeonju)</text>
+                    <!-- Marker -->
+                    <g id="map-marker" transform="translate(75,60)">
+                        <text x="-12" y="6" font-size="18">🚞</text>
+                    </g>
+                </svg>
+                <div class="journey-stats">
+                    <div class="stat-date" id="journey-date">📅 07/03/2025</div>
+                    <div class="distance-counter">
+                        <span style="font-size:16px;">💖</span> <span id="distance-val">0</span> km
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="rsvp-section">
+            <button class="rsvp-trigger" id="btn-attend">Sẽ tham dự</button>
+            <button class="rsvp-trigger decline" id="btn-decline">Không thể tham dự</button>
+        </div>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="controls" id="controls" style="display:none;">
+        <button class="ctrl-btn" id="btn-replay" title="Tái Hiện">↻</button>
+    </div>
+
+    <!-- RSVP MODAL -->
+    <div id="rsvp-modal">
+        <div id="rsvp-content">
+            <div id="rsvp-interactive-area">
+                <div id="rsvp-title">Vui lòng xác nhận</div>
+                <input type="text" id="rsvp-input" placeholder="Vui lòng nhập tên">
+                <textarea id="rsvp-message" placeholder="Lời nhắn gửi" rows="3"></textarea>
+                <div class="rsvp-buttons">
+                    <button class="rsvp-btn btn-cancel" id="btn-huy">Hủy</button>
+                    <button class="rsvp-btn btn-confirm" id="btn-xacnhan">Xác Nhận</button>
+                </div>
+            </div>
+            <div id="rsvp-loading">Đang gửi...</div>
+            <div id="rsvp-success-area">
+                <div id="rsvp-success-msg"></div>
+                <button class="rsvp-btn btn-confirm" id="btn-hihihuhu" style="width:100%;">Thoát</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (() => {
+            const stage = document.getElementById('stage');
+            const envGroup = document.getElementById('envelope-group');
+            const flap = document.getElementById('layer-flap');
+            const card = document.getElementById('layer-card');
+            const page = document.getElementById('page');
+            const ctrls = document.getElementById('controls');
+            const flipper = document.getElementById('card-flipper');
+
+            let timers = [];
+            function clearAll() { timers.forEach(clearTimeout); timers = []; }
+
+            function reset() {
+                clearAll();
+                stage.classList.remove('hidden');
+                stage.style.display = '';
+                stage.style.opacity = '1';
+
+                // RESET ENVELOPE OPACITY FOR REPLAY
+                const envelopeParts = document.querySelectorAll('.layer-back, .layer-liner, .layer-front, .layer-flap');
+                envelopeParts.forEach(part => {
+                    part.style.transition = '';
+                    part.style.opacity = '1';
+                });
+
+                envGroup.classList.remove('settle');
+                flap.classList.remove('animate');
+                flap.style.transform = 'rotateX(0deg)';
+                flap.style.zIndex = '50';
+
+                card.classList.remove('animate');
+                card.style.opacity = '1';
+                card.style.transform = 'translate(-50%, -50%) scale(0.55) rotate(-90deg)';
+
+                page.classList.remove('visible');
+                page.style.opacity = '0';
+                page.style.display = 'none';
+                flipper.classList.remove('flipped');
+                window.scrollTo(0, 0);
+
+                // Force reflow
+                void flap.offsetWidth;
+                void card.offsetWidth;
+            }
+
+            function finish() {
+                stage.style.pointerEvents = 'none';
+
+                // 1. Show the page container immediately behind the stage
+                page.style.display = 'flex';
+                page.classList.add('visible');
+
+                // 2. Fade out the ENVELOPE ONLY, leave the card visible
+                const envelopeParts = document.querySelectorAll('.layer-back, .layer-liner, .layer-front, .layer-flap');
+                envelopeParts.forEach(part => {
+                    part.style.transition = 'opacity 0.5s ease';
+                    part.style.opacity = '0';
+                });
+
+                // 3. The Switch: Hide the animated card ONLY when the page is fully opaque
+                timers.push(setTimeout(() => {
+                    card.style.opacity = '0';
+                    page.style.opacity = '1';
+                    ctrls.style.display = 'flex';
+                }, 500));
+
+                // 4. Cleanup stage
+                timers.push(setTimeout(() => {
+                    stage.classList.add('hidden');
+                }, 700));
+            }
+
+            function play() {
+                reset();
+                envGroup.style.opacity = '1'; // Ensure envelope is visible
+                stage.style.pointerEvents = 'auto'; // Re-enable clicks on stage during anim
+
+                // Clear inline styles so animations can take over
+                setTimeout(() => {
+                    flap.style.transform = '';
+                    flap.style.zIndex = '';
+                    card.style.transform = '';
+                    card.style.zIndex = '';
+
+                    // Phase A (0s): Flap opens
+                    flap.classList.add('animate');
+
+                    // Phase B (0.5s): Card starts sliding
+                    timers.push(setTimeout(() => {
+                        card.classList.add('animate');
+                    }, 500));
+
+                    // Start the hand-off exactly when the card animation finishes (3.5s + 0.5s delay = 4.0s)
+                    timers.push(setTimeout(finish, 4000));
+                }, 50);
+            }
+
+            play();
+
+            document.getElementById('btn-replay').addEventListener('click', play);
+
+            // Tap to skip
+            stage.addEventListener('click', () => {
+                clearAll();
+                finish();
+            });
+
+            // Card flip
+            document.getElementById('btn-flip').addEventListener('click', () => {
+                flipper.classList.toggle('flipped');
+            });
+
+            // ========== RSVP ==========
+            const modal = document.getElementById('rsvp-modal');
+            const inputName = document.getElementById('rsvp-input');
+            const interactiveArea = document.getElementById('rsvp-interactive-area');
+            const loadingArea = document.getElementById('rsvp-loading');
+            const successArea = document.getElementById('rsvp-success-area');
+            const successMsg = document.getElementById('rsvp-success-msg');
+            const btnHihiHuhu = document.getElementById('btn-hihihuhu');
+            let sel = '';
+
+            function openModal(type) {
+                sel = type;
+                interactiveArea.style.display = 'block';
+                successArea.style.display = 'none';
+                loadingArea.style.display = 'none';
+                inputName.value = '';
+                modal.classList.add('visible');
+            }
+
+            document.getElementById('btn-attend').addEventListener('click', () => openModal('attending'));
+            document.getElementById('btn-decline').addEventListener('click', () => openModal('not_attending'));
+            document.getElementById('btn-huy').addEventListener('click', () => modal.classList.remove('visible'));
+            btnHihiHuhu.addEventListener('click', () => modal.classList.remove('visible'));
+
+            document.getElementById('btn-xacnhan').addEventListener('click', () => {
+                const name = inputName.value.trim() || 'Khách (Không nhập tên)';
+                const messageBox = document.getElementById('rsvp-message');
+                const message = messageBox ? messageBox.value.trim() : '';
+                const status = sel === 'attending' ? 'Sẽ tham dự' : 'Không thể tham dự';
+                interactiveArea.style.display = 'none';
+                loadingArea.style.display = 'block';
+                fetch('https://formspree.io/f/mqegrvwo', {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, message, status })
+                }).then(() => {
+                    loadingArea.style.display = 'none';
+                    successArea.style.display = 'block';
+                    if (sel === 'attending') {
+                        successMsg.innerHTML = 'Tụi mình/em cảm ơn vì đã tham dự ^^~';
+                        btnHihiHuhu.textContent = 'Hihi';
+                    } else {
+                        successMsg.innerHTML = 'Rất tiếc vì anh/chị/em đã không thể tham dự!<br><br>Hẹn gặp lại vào một ngày gần nhất!';
+                        btnHihiHuhu.textContent = 'Huhu';
+                    }
+                }).catch(() => {
+                    loadingArea.style.display = 'none';
+                    successArea.style.display = 'block';
+                    successMsg.textContent = 'Đã có lỗi xảy ra. Xin vui lòng thử lại!';
+                    btnHihiHuhu.textContent = 'Đóng';
+                });
+            });
+
+            modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('visible'); });
+
+            // Click to copy exact address
+            const addressEl = document.getElementById('address-text');
+            if (addressEl) {
+                addressEl.addEventListener('click', () => {
+                    const copyText = '전북특별자치도 전주시 덕진구 명륜4길 10-4';
+                    navigator.clipboard.writeText(copyText).then(() => {
+                        const originalText = addressEl.innerHTML;
+                        addressEl.innerHTML = '✅ Đã copy!';
+                        addressEl.style.color = 'var(--gold)';
+                        setTimeout(() => {
+                            addressEl.innerHTML = originalText;
+                            addressEl.style.color = '';
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('Lỗi khi copy:', err);
+                    });
+                });
+            }
+
+            // Ensure right clicks are disabled
+            document.addEventListener('contextmenu', e => e.preventDefault());
+
+            // Initialize Distance Map Animation -> Continuous loop (2 seconds = 1 cycle/lapse)
+            function updateJourneyMap() {
+                const path = document.getElementById('route-path');
+                const activeRoute = document.getElementById('active-route');
+                const marker = document.getElementById('map-marker');
+                const dateDiv = document.getElementById('journey-date');
+                const distSpan = document.getElementById('distance-val');
+
+                if (!path || !marker) return;
+
+                const pathLen = path.getTotalLength();
+                activeRoute.style.strokeDasharray = pathLen;
+                activeRoute.style.strokeDashoffset = pathLen;
+
+                const startMs = new Date('2025-03-07T00:00:00+09:00').getTime();
+                const nowMs = new Date().getTime();
+                const totalSimMs = Math.max(0, nowMs - startMs);
+
+                const diffDays = totalSimMs / (1000 * 60 * 60 * 24);
+                const totalCycles = diffDays / 14;
+                // 2 seconds per lapse (per cycle)
+                const animDuration = totalCycles * 2000;
+
+                let startTime = null;
+
+                function step(timestamp) {
+                    if (!startTime) startTime = timestamp;
+                    let p = (timestamp - startTime) / animDuration;
+
+                    if (p > 1) p = 1;
+
+                    const simMs = startMs + (totalSimMs * p);
+                    const simDate = new Date(simMs);
+
+                    const simDiffDays = (simMs - startMs) / (24 * 60 * 60 * 1000);
+                    const cyclesCompleted = Math.floor(simDiffDays / 14);
+                    const dayInCycle = simDiffDays % 14;
+
+                    let simDist = cyclesCompleted * 400;
+                    let progress = 0; // 0 = Seoul, 1 = Jeonju
+
+                    if (dayInCycle < 0.5) {
+                        let travelP = dayInCycle / 0.5;
+                        progress = travelP;
+                        simDist += travelP * 200;
+                    } else if (dayInCycle < 2) {
+                        progress = 1;
+                        simDist += 200;
+                    } else if (dayInCycle < 2.5) {
+                        let travelP = (dayInCycle - 2) / 0.5;
+                        progress = 1 - travelP;
+                        simDist += 200 + (travelP * 200);
+                    } else {
+                        progress = 0;
+                        simDist += 400;
+                    }
+
+                    const pt = path.getPointAtLength(progress * pathLen);
+
+                    marker.setAttribute('transform', `translate(${pt.x}, ${pt.y}) ${progress > 0.5 ? 'scale(-1,1)' : ''}`);
+
+                    if (progress > 0 && progress < 1) {
+                        activeRoute.style.strokeDashoffset = pathLen * (1 - progress);
+                    } else {
+                        activeRoute.style.strokeDashoffset = pathLen;
+                    }
+
+                    dateDiv.textContent = `📅 ${simDate.getDate().toString().padStart(2, '0')}/${(simDate.getMonth() + 1).toString().padStart(2, '0')}/${simDate.getFullYear()}`;
+                    distSpan.textContent = Math.floor(simDist).toLocaleString();
+
+                    if (p < 1) {
+                        requestAnimationFrame(step);
+                    } else {
+                        // Restart visual loop endlessly 
+                        setTimeout(() => { startTime = null; requestAnimationFrame(step); }, 3000);
+                    }
+                }
+
+                setTimeout(() => requestAnimationFrame(step), 1000);
+            }
+            // Run map math
+            updateJourneyMap();
+
+        })();
+    </script>
+</body>
+
+</html>
