@@ -35,7 +35,7 @@
             color: var(--text);
         }
 
-        /* ========== BACKDROP ========== */
+        /* HÌNH NỀN */
         #backdrop {
             position: fixed;
             top: 0;
@@ -48,10 +48,9 @@
             z-index: 0;
         }
 
-        /* ==========================================================
-           ANIMATION STAGE
-           3D-perspective container. All 5 layers composited here.
-           ========================================================== */
+        /* ========
+           HIỆU ỨNG
+           ======== */
         #stage {
             position: fixed;
             top: 0;
@@ -71,12 +70,12 @@
             pointer-events: none;
         }
 
-        /* Envelope group — positions all 5 layers as one unit */
+        /* Phong bì */
         .envelope-group {
             position: relative;
             width: min(75vw, 420px);
             aspect-ratio: 600 / 440;
-            /* Landscape envelope */
+            /* Phong bì ngang */
             transform-style: preserve-3d;
             transition: transform 1s ease, opacity 0.8s ease;
         }
@@ -86,12 +85,12 @@
             opacity: 0;
         }
 
-        /* ====== LAYER 1: Envelope Back (the pocket) ====== */
+        /* Mặt sau */
         .layer-back {
             position: absolute;
             inset: 0;
             background-color: #d6c9b0;
-            /* Visible pocket color when card slides out */
+            /* Màu túi hiển thị khi thiệp rút ra */
             background-image: url('assets/envelope.jpg');
             background-size: cover;
             border-radius: 6px;
@@ -99,10 +98,10 @@
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12), inset 0 2px 8px rgba(0, 0, 0, 0.06);
         }
 
-        /* ====== LAYER 2: Liner (interior wallpaper of envelope back) ====== */
+        /* Lót trong */
         .layer-liner {
             position: absolute;
-            /* Inset it 10px so the envelope paper 'frame' is visible around the gold */
+            /* Thụt vào 10px để lộ viền giấy phong bì quanh lớp lót vàng */
             top: 10px;
             left: 10px;
             right: 10px;
@@ -114,17 +113,17 @@
             border-radius: 4px;
         }
 
-        /* ====== LAYER 3: The Card ====== */
+        /* Thiệp */
         .layer-card {
             position: absolute;
             left: 50%;
             top: 50%;
-            /* Card width matched perfectly to the static card to prevent jumping */
+            /* Chiều rộng thiệp khớp khít */
             width: min(80vw, 380px);
             aspect-ratio: 366 / 512;
             transform-origin: center center;
             z-index: 30;
-            /* Start: inside envelope, scaled to fit, rotated -90deg (landscape inside) */
+            /* Bắt đầu */
             transform: translate(-50%, -50%) scale(0.55) rotate(-90deg);
         }
 
@@ -134,17 +133,17 @@
             object-fit: cover;
             border-radius: 6px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            /* Tight shadow while inside */
+            /* Đổ bóng nhỏ  */
             transition: box-shadow 2.2s ease-out;
         }
 
-        /* Shadow grows as card moves toward viewer */
+        /* Đổ bóng lớn dần khi thiệp tiến lại gần người xem */
         .layer-card.animate img {
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
-            /* Deep, soft shadow when out */
+            /* Bóng mờ */
         }
 
-        /* Card animation: slide out, rotate, scale, come forward */
+        /* Hiệu ứng thiệp */
         .layer-card.animate {
             animation: cardSlideOut 3.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
@@ -154,43 +153,43 @@
                 transform: translate(-50%, -50%) scale(0.55) rotate(-90deg) translateZ(0px);
             }
 
-            /* Move the card FORWARD (translateZ) as it clears the pocket to avoid clipping */
+            /* Trượt thiệp VỀ PHÍA TRƯỚC (translateZ) khi rút khỏi túi để không bị cắt */
             45% {
                 transform: translate(-50%, -125%) scale(0.7) rotate(0deg) translateZ(50px);
             }
 
             100% {
-                /* Final position matched to scale 1.0 to match the document card */
+                /* Vị trí cuối cùng là tỷ lệ 1.0 để khớp với thiệp trên trang */
                 transform: translate(-50%, -50%) scale(1) rotate(0deg) translateZ(120px);
             }
         }
 
-        /* ====== LAYER 4: Envelope Front (covers the card) ====== */
+        /* Mặt trước phong bì */
         .layer-front {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
             height: 75%;
-            /* Taller pocket */
+            /* Cao hơn một chút */
             background-image: url('assets/envelope.jpg');
             background-size: cover;
             z-index: 45;
-            /* Must be above the card (30) */
+            /* Phải nằm trên lớp thiệp (30) */
             clip-path: polygon(0% 0%, 15% 10%, 85% 10%, 100% 0%, 100% 100%, 0% 100%);
         }
 
-        /* ====== LAYER 5: Envelope Flap (top, folds down) ====== */
+        /* Nắp phong bì */
         .layer-flap {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 60%;
-            /* Reaches further down than the pocket start */
+            /* Kéo dài xuống sâu hơn */
             transform-origin: top center;
             z-index: 50;
-            /* Topmost layer when closed */
+            /* Lớp trên cùng */
         }
 
         .layer-flap.animate {
@@ -213,7 +212,7 @@
                 z-index: 5;
             }
 
-            /* Z-swap at 90deg */
+            /* Đảo trục Z tại góc 90 độ */
             100% {
                 transform: rotateX(-180deg);
                 z-index: 5;
@@ -226,16 +225,16 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('New-References/assets.ppassets.com/p-pwaFlMClk4oQdNc6bHFiQ/flyer/paper_static/base');
+            background-image: url('assets/envelope.jpg');
             background-size: cover;
-            /* Trapezoid shape: starts wide, ends narrower but not a point */
+            /* Hình thang */
             clip-path: polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%);
             backface-visibility: hidden;
-            /* Simulates paper thickness/lighting */
+            /* Giả lập độ dày giấy / ánh sáng */
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        /* Inner face of flap (gold liner, visible when flap is past 90deg) */
+        /* Mặt trong */
         .flap-inner {
             position: absolute;
             top: 0;
@@ -249,7 +248,7 @@
         .flap-inner-paper {
             position: absolute;
             inset: 0;
-            background-image: url('New-References/assets.ppassets.com/p-pwaFlMClk4oQdNc6bHFiQ/flyer/paper_static/base');
+            background-image: url('assets/envelope.jpg');
             background-size: cover;
             clip-path: polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%);
         }
@@ -260,17 +259,16 @@
             left: 5%;
             right: 5%;
             bottom: 8%;
-            /* Same image + size as .layer-liner for seamless continuity */
-            background-image: url('New-References/assets.ppassets.com/p-4CR7NtpPlVIOqlZO4z5iym/flyer/liner_static/jpeg_large');
+            /* Cùng hình ảnh + kích thước với lớp lót để tạo độ liền mạch */
+            background-image: url('assets/liner.jpg');
             background-size: cover;
             background-position: center;
             clip-path: polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%);
         }
 
-        /* ==========================================================
-           SCROLLABLE PAGE (shown after animation)
-           Card + flip + event info + RSVP in normal document flow.
-           ========================================================== */
+        /* ==========
+           TRANG CUỘN
+           ========== */
         #page {
             position: relative;
             z-index: 5;
@@ -443,7 +441,7 @@
             color: #fff;
         }
 
-        /* ========== CONTROLS ========== */
+        /* ĐIỀU KHIỂN */
         .controls {
             position: fixed;
             left: 20px;
@@ -474,7 +472,7 @@
             transform: scale(1.1);
         }
 
-        /* ========== RSVP MODAL ========== */
+        /*  RSVP */
         #rsvp-modal {
             display: none;
             position: fixed;
@@ -595,7 +593,7 @@
             margin-bottom: 22px;
         }
 
-        /* ========== JOURNEY MAP & VIDEO ========== */
+        /* BẢN ĐỒ HÀNH TRÌNH & VIDEO */
         .journey-section {
             display: flex;
             flex-direction: row;
@@ -603,7 +601,7 @@
             gap: 12px;
             width: 100%;
             max-width: 420px;
-            /* Matched width consistently to event-info */
+            /* Khớp chiều rộng chuẩn với phần thông tin sự kiện */
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(184, 134, 11, 0.15);
@@ -615,7 +613,7 @@
 
         .journey-media {
             flex: 1.1;
-            /* Grants the video slice slightly more horizontal priority */
+            /* Cho phần hiển thị video rộng hơn một chút */
         }
 
         .journey-video {
@@ -665,7 +663,7 @@
             font-style: normal;
         }
 
-        /* Card Text Overlay */
+        /* Lớp Chữ Chèn Lên Thiệp */
         .card-back-text {
             position: absolute;
             font-family: 'Great Vibes', cursive;
@@ -683,7 +681,7 @@
             backdrop-filter: blur(4px);
         }
 
-        /* Custom Textarea */
+        /* Ô Nhập Văn Bản */
         #rsvp-message {
             width: 100%;
             padding: 14px;
@@ -737,20 +735,20 @@
 <body>
     <div id="backdrop"></div>
 
-    <!-- ============ ANIMATION STAGE ============ -->
+    <!--  KHUNG  -->
     <div id="stage">
         <div class="envelope-group" id="envelope-group">
-            <!-- Layer 1: Envelope Back -->
+            <!-- Lớp 1: Mặt sau phong bì -->
             <div class="layer-back"></div>
-            <!-- Layer 2: Liner -->
+            <!-- Lớp 2: Giấy lót -->
             <div class="layer-liner"></div>
-            <!-- Layer 3: The Card -->
+            <!-- Lớp 3: Tấm thiệp -->
             <div class="layer-card" id="layer-card">
-                <img src="New-References/card_front.png" alt="Card">
+                <img src="assets/card_front.png" alt="Card">
             </div>
-            <!-- Layer 4: Envelope Front -->
+            <!-- Lớp 4: Lớp giấy mặt ngoài -->
             <div class="layer-front"></div>
-            <!-- Layer 5: Flap -->
+            <!-- Lớp 5: Nắp gập -->
             <div class="layer-flap" id="layer-flap">
                 <div class="flap-outer"></div>
                 <div class="flap-inner">
@@ -761,11 +759,11 @@
         </div>
     </div>
 
-    <!-- ============ SCROLLABLE PAGE ============ -->
+    <!--  TRANG CUỘN  -->
     <div id="page">
         <div class="card-container">
             <div class="card-flipper" id="card-flipper">
-                <div class="card-face"><img src="New-References/card_front.png" alt="Front"></div>
+                <div class="card-face"><img src="assets/card_front.png" alt="Front"></div>
                 <div class="card-face card-back-face">
                     <img src="assets/card_back.jpg" alt="Back">
                     <div class="card-back-text">Mọi yêu thương xin gửi về Bii</div>
@@ -787,33 +785,33 @@
             </div>
         </div>
 
-        <!-- JOURNEY SECTION (Video + Map) -->
+        <!-- PHẦN HÀNH TRÌNH (Video + Bản Đồ) -->
         <div class="journey-section">
             <div class="journey-media">
                 <video src="assets/Video_1.mp4" autoplay loop muted playsinline class="journey-video"></video>
             </div>
             <div class="map-container">
                 <svg class="korea-map" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
-                    <!-- South Korea Coastline detailed polygon -->
+                    <!-- Mô phỏng đường bờ biển Hàn Quốc -->
                     <polygon
                         points="50,10 70,5 90,15 100,20 120,30 140,50 160,80 170,110 180,150 185,190 170,220 160,250 140,270 120,285 100,280 80,290 60,280 50,260 40,240 30,200 40,160 35,130 50,80"
                         fill="#f0edd1" stroke="rgba(184, 134, 11, 0.4)" stroke-width="2" />
-                    <!-- Jeju Island -->
+                    <!-- Đảo Jeju -->
                     <circle cx="60" cy="270" r="10" fill="#f0edd1" stroke="rgba(184, 134, 11, 0.4)" stroke-width="2" />
-                    <!-- Route -->
+                    <!-- Đường Vận Chuyển -->
                     <path id="route-path" d="M75,60 Q110,120 90,180" fill="none" stroke="#ddd" stroke-width="3"
                         stroke-dasharray="5,5" />
                     <path id="active-route" d="M75,60 Q110,120 90,180" fill="none" stroke="var(--gold)" stroke-width="3"
                         stroke-dasharray="150" stroke-dashoffset="150" />
-                    <!-- Points -->
+                    <!-- Các Điểm -->
                     <circle cx="75" cy="60" r="6" fill="#fff" stroke="var(--gold)" stroke-width="2" />
                     <circle cx="90" cy="180" r="6" fill="#fff" stroke="var(--gold)" stroke-width="2" />
-                    <!-- Tags -->
+                    <!-- Tên Nhãn -->
                     <text x="55" y="50" font-family="sans-serif" font-size="11" fill="var(--dark)" font-weight="bold">서울
                         (Seoul)</text>
                     <text x="100" y="195" font-family="sans-serif" font-size="11" fill="var(--dark)"
                         font-weight="bold">전주 (Jeonju)</text>
-                    <!-- Marker -->
+                    <!-- Điểm Chạy Đánh Dấu -->
                     <g id="map-marker" transform="translate(75,60)">
                         <text x="-12" y="6" font-size="18">🚞</text>
                     </g>
@@ -833,12 +831,12 @@
         </div>
     </div>
 
-    <!-- CONTROLS -->
+    <!-- NÚT ĐIỀU KHIỂN -->
     <div class="controls" id="controls" style="display:none;">
         <button class="ctrl-btn" id="btn-replay" title="Tái Hiện">↻</button>
     </div>
 
-    <!-- RSVP MODAL -->
+    <!-- KHUNG RSVP  -->
     <div id="rsvp-modal">
         <div id="rsvp-content">
             <div id="rsvp-interactive-area">
@@ -877,7 +875,7 @@
                 stage.style.display = '';
                 stage.style.opacity = '1';
 
-                // RESET ENVELOPE OPACITY FOR REPLAY
+                // ĐẶT LẠI ĐỘ TRONG SUỐT CHO PHONG BÌ ĐỂ LẶP LẠI
                 const envelopeParts = document.querySelectorAll('.layer-back, .layer-liner, .layer-front, .layer-flap');
                 envelopeParts.forEach(part => {
                     part.style.transition = '';
@@ -899,7 +897,7 @@
                 flipper.classList.remove('flipped');
                 window.scrollTo(0, 0);
 
-                // Force reflow
+                // Ép trình duyệt tính toán lại giao diện
                 void flap.offsetWidth;
                 void card.offsetWidth;
             }
@@ -907,25 +905,25 @@
             function finish() {
                 stage.style.pointerEvents = 'none';
 
-                // 1. Show the page container immediately behind the stage
+                // Hiển thị trang chứa
                 page.style.display = 'flex';
                 page.classList.add('visible');
 
-                // 2. Fade out the ENVELOPE ONLY, leave the card visible
+                // Làm mờ CHỈ PHONG BÌ
                 const envelopeParts = document.querySelectorAll('.layer-back, .layer-liner, .layer-front, .layer-flap');
                 envelopeParts.forEach(part => {
                     part.style.transition = 'opacity 0.5s ease';
                     part.style.opacity = '0';
                 });
 
-                // 3. The Switch: Hide the animated card ONLY when the page is fully opaque
+                // Chuyển Đổi
                 timers.push(setTimeout(() => {
                     card.style.opacity = '0';
                     page.style.opacity = '1';
                     ctrls.style.display = 'flex';
                 }, 500));
 
-                // 4. Cleanup stage
+                // 4. Dọn dẹp
                 timers.push(setTimeout(() => {
                     stage.classList.add('hidden');
                 }, 700));
@@ -933,25 +931,25 @@
 
             function play() {
                 reset();
-                envGroup.style.opacity = '1'; // Ensure envelope is visible
-                stage.style.pointerEvents = 'auto'; // Re-enable clicks on stage during anim
+                envGroup.style.opacity = '1';
+                stage.style.pointerEvents = 'auto';
 
-                // Clear inline styles so animations can take over
+                // Xóa inline CSS để hiệu ứng chạy
                 setTimeout(() => {
                     flap.style.transform = '';
                     flap.style.zIndex = '';
                     card.style.transform = '';
                     card.style.zIndex = '';
 
-                    // Phase A (0s): Flap opens
+                    // Đoạn A
                     flap.classList.add('animate');
 
-                    // Phase B (0.5s): Card starts sliding
+                    // Đoạn B
                     timers.push(setTimeout(() => {
                         card.classList.add('animate');
                     }, 500));
 
-                    // Start the hand-off exactly when the card animation finishes (3.5s + 0.5s delay = 4.0s)
+                    // Đoạn cuối (3.5s + 0.5s = 4.0s)
                     timers.push(setTimeout(finish, 4000));
                 }, 50);
             }
@@ -960,18 +958,18 @@
 
             document.getElementById('btn-replay').addEventListener('click', play);
 
-            // Tap to skip
+            // Nhấn để bỏ qua
             stage.addEventListener('click', () => {
                 clearAll();
                 finish();
             });
 
-            // Card flip
+            // Xoay mặt sau của thiệp
             document.getElementById('btn-flip').addEventListener('click', () => {
                 flipper.classList.toggle('flipped');
             });
 
-            // ========== RSVP ==========
+            // KIỂM TRA MÁY CHỦ RSVP
             const modal = document.getElementById('rsvp-modal');
             const inputName = document.getElementById('rsvp-input');
             const interactiveArea = document.getElementById('rsvp-interactive-area');
@@ -1026,7 +1024,7 @@
 
             modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('visible'); });
 
-            // Click to copy exact address
+            // Nhấn để copy
             const addressEl = document.getElementById('address-text');
             if (addressEl) {
                 addressEl.addEventListener('click', () => {
@@ -1045,10 +1043,10 @@
                 });
             }
 
-            // Ensure right clicks are disabled
+            // Tắt chuột phải
             document.addEventListener('contextmenu', e => e.preventDefault());
 
-            // Initialize Distance Map Animation -> Continuous loop (2 seconds = 1 cycle/lapse)
+            // Bản Đồ -> Lặp (2 giây = 1 vòng)
             function updateJourneyMap() {
                 const path = document.getElementById('route-path');
                 const activeRoute = document.getElementById('active-route');
@@ -1068,7 +1066,7 @@
 
                 const diffDays = totalSimMs / (1000 * 60 * 60 * 24);
                 const totalCycles = diffDays / 14;
-                // 2 seconds per lapse (per cycle)
+                // 2 giây cho mỗi vòng (mỗi lượt)
                 const animDuration = totalCycles * 2000;
 
                 let startTime = null;
@@ -1121,14 +1119,14 @@
                     if (p < 1) {
                         requestAnimationFrame(step);
                     } else {
-                        // Restart visual loop endlessly 
+                        // Loop
                         setTimeout(() => { startTime = null; requestAnimationFrame(step); }, 3000);
                     }
                 }
 
                 setTimeout(() => requestAnimationFrame(step), 1000);
             }
-            // Run map math
+            // Logic
             updateJourneyMap();
 
         })();
