@@ -703,14 +703,14 @@
             border-color: var(--gold);
         }
 
-        .address-copyable {
+        .address-copyable, .bank-copyable {
             cursor: pointer;
             transition: color 0.2s, transform 0.2s;
             position: relative;
             display: inline-block;
         }
 
-        .address-copyable:active {
+        .address-copyable:active, .bank-copyable:active {
             color: var(--gold);
             transform: scale(0.98);
         }
@@ -722,25 +722,6 @@
 
             .card-back-text {
                 font-size: 24px;
-            }
-
-            .journey-section {
-                flex-direction: column;
-            }
-
-            .journey-media {
-                width: 100%;
-                display: flex;
-                justify-content: center;
-            }
-
-            .journey-video {
-                max-width: 75%;
-                margin: 0 auto;
-            }
-
-            .korea-map {
-                max-width: 200px;
             }
 
             .rsvp-trigger {
@@ -786,7 +767,11 @@
                 <div class="card-face"><img src="assets/card_front.png" alt="Front"></div>
                 <div class="card-face card-back-face">
                     <img src="assets/card_back.jpg" alt="Back">
-                    <div class="card-back-text">Mọi yêu thương xin gửi về Bii</div>
+                    <div class="card-back-text">
+                        Mọi yêu thương xin gửi về<br>
+                        <span style="font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: bold; color: #555; text-shadow: none;">토스뱅크 (Toss)<br>
+                        <span class="bank-copyable" id="card-bank-text" title="Nhấn để copy">1001-1608-3660</span></span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -842,6 +827,15 @@
                         <span style="font-size:16px;">💖</span> <span id="distance-val">0</span> km
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- THÔNG TIN NGÂN HÀNG -->
+        <div class="event-info bank-info" style="margin: 20px auto 30px auto;">
+            <div class="event-title">Mọi yêu thương xin gửi về</div>
+            <div class="event-section">
+                <div class="event-label">토스뱅크 (Toss)</div>
+                <div class="event-value bank-copyable" id="page-bank-text" title="Nhấn để copy">1001-1608-3660</div>
             </div>
         </div>
 
@@ -1057,8 +1051,39 @@
                             addressEl.innerHTML = originalText;
                             addressEl.style.color = '';
                         }, 2000);
-                    }).catch(err => {
-                        console.error('Lỗi khi copy:', err);
+                    });
+                });
+            }
+
+            // Copy Bank (Card)
+            const cardBankEl = document.getElementById('card-bank-text');
+            if (cardBankEl) {
+                cardBankEl.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    navigator.clipboard.writeText('100116083660').then(() => {
+                        const originalText = cardBankEl.innerHTML;
+                        cardBankEl.innerHTML = '✅ Đã copy!';
+                        cardBankEl.style.color = 'var(--gold)';
+                        setTimeout(() => {
+                            cardBankEl.innerHTML = originalText;
+                            cardBankEl.style.color = '';
+                        }, 2000);
+                    });
+                });
+            }
+
+            // Copy Bank (Page)
+            const pageBankEl = document.getElementById('page-bank-text');
+            if (pageBankEl) {
+                pageBankEl.addEventListener('click', () => {
+                    navigator.clipboard.writeText('100116083660').then(() => {
+                        const originalText = pageBankEl.innerHTML;
+                        pageBankEl.innerHTML = '✅ Đã copy!';
+                        pageBankEl.style.color = 'var(--gold)';
+                        setTimeout(() => {
+                            pageBankEl.innerHTML = originalText;
+                            pageBankEl.style.color = '';
+                        }, 2000);
                     });
                 });
             }
