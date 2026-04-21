@@ -85,7 +85,7 @@
             opacity: 0;
         }
 
-        /* Mặt sau */
+        /* Mặt sau phong bì */
         .layer-back {
             position: absolute;
             inset: 0;
@@ -137,7 +137,7 @@
             transition: box-shadow 2.2s ease-out;
         }
 
-        /* Đổ bóng lớn dần khi thiệp tiến lại gần người xem */
+        /* Đổ bóng lớn dần khi thiệp tiến lại*/
         .layer-card.animate img {
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
             /* Bóng mờ */
@@ -164,7 +164,7 @@
             }
         }
 
-        /* Mặt trước phong bì */
+        /* Mặt trước*/
         .layer-front {
             position: absolute;
             bottom: 0;
@@ -189,7 +189,7 @@
             /* Kéo dài xuống sâu hơn */
             transform-origin: top center;
             z-index: 50;
-            /* Lớp trên cùng */
+            /* Lớp trên cùng*/
         }
 
         .layer-flap.animate {
@@ -266,9 +266,9 @@
             clip-path: polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%);
         }
 
-        /* ==========
-           TRANG CUỘN
-           ========== */
+        /* ===========
+           TRANG CUỘN 
+           ===========*/
         #page {
             position: relative;
             z-index: 5;
@@ -410,30 +410,33 @@
 
         .rsvp-trigger {
             flex: 1;
-            padding: 14px 10px;
+            padding: 14px 4px;
             border: 2px solid var(--gold);
-            background: transparent;
-            color: var(--gold);
+            background: var(--gold);
+            color: #fff;
             font-family: inherit;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
-            letter-spacing: 1.5px;
+            letter-spacing: 1px;
             text-transform: uppercase;
             cursor: pointer;
             border-radius: 8px;
             transition: all 0.3s ease;
+            white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(184, 134, 11, 0.2);
         }
 
         .rsvp-trigger:hover {
-            background: var(--gold);
-            color: #fff;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(184, 134, 11, 0.3);
+            box-shadow: 0 6px 20px rgba(184, 134, 11, 0.4);
+            filter: brightness(1.05);
         }
 
         .rsvp-trigger.decline {
-            border-color: #999;
-            color: #777;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ccc;
+            color: #666;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
 
         .rsvp-trigger.decline:hover {
@@ -441,7 +444,7 @@
             color: #fff;
         }
 
-        /* ĐIỀU KHIỂN */
+        /* CÔNG CỤ  */
         .controls {
             position: fixed;
             left: 20px;
@@ -472,7 +475,7 @@
             transform: scale(1.1);
         }
 
-        /*  RSVP */
+        /* CỬA SỔ RSVP */
         #rsvp-modal {
             display: none;
             position: fixed;
@@ -725,8 +728,25 @@
                 flex-direction: column;
             }
 
+            .journey-media {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+            }
+
+            .journey-video {
+                max-width: 75%;
+                margin: 0 auto;
+            }
+
             .korea-map {
                 max-width: 200px;
+            }
+
+            .rsvp-trigger {
+                font-size: 11px;
+                padding: 12px 2px;
+                letter-spacing: 0.5px;
             }
         }
     </style>
@@ -735,20 +755,20 @@
 <body>
     <div id="backdrop"></div>
 
-    <!--  KHUNG  -->
+    <!-- KHUNG -->
     <div id="stage">
         <div class="envelope-group" id="envelope-group">
-            <!-- Lớp 1: Mặt sau phong bì -->
+            <!-- Mặt sau phong bì -->
             <div class="layer-back"></div>
-            <!-- Lớp 2: Giấy lót -->
+            <!-- Giấy lót -->
             <div class="layer-liner"></div>
-            <!-- Lớp 3: Tấm thiệp -->
+            <!-- Tấm thiệp -->
             <div class="layer-card" id="layer-card">
                 <img src="assets/card_front.png" alt="Card">
             </div>
-            <!-- Lớp 4: Lớp giấy mặt ngoài -->
+            <!-- Lớp giấy mặt ngoài -->
             <div class="layer-front"></div>
-            <!-- Lớp 5: Nắp gập -->
+            <!-- Nắp gập -->
             <div class="layer-flap" id="layer-flap">
                 <div class="flap-outer"></div>
                 <div class="flap-inner">
@@ -759,7 +779,7 @@
         </div>
     </div>
 
-    <!--  TRANG CUỘN  -->
+    <!-- TRANG CUỘN  -->
     <div id="page">
         <div class="card-container">
             <div class="card-flipper" id="card-flipper">
@@ -826,8 +846,8 @@
         </div>
 
         <div class="rsvp-section">
-            <button class="rsvp-trigger" id="btn-attend">Sẽ tham dự</button>
             <button class="rsvp-trigger decline" id="btn-decline">Không thể tham dự</button>
+            <button class="rsvp-trigger" id="btn-attend">Sẽ tham dự</button>
         </div>
     </div>
 
@@ -836,7 +856,7 @@
         <button class="ctrl-btn" id="btn-replay" title="Tái Hiện">↻</button>
     </div>
 
-    <!-- KHUNG RSVP  -->
+    <!-- KHUNG RSVP -->
     <div id="rsvp-modal">
         <div id="rsvp-content">
             <div id="rsvp-interactive-area">
@@ -875,7 +895,7 @@
                 stage.style.display = '';
                 stage.style.opacity = '1';
 
-                // ĐẶT LẠI ĐỘ TRONG SUỐT CHO PHONG BÌ ĐỂ LẶP LẠI
+                // ĐẶT LẠI ĐỘ TRONG SUỐT CHO PHONG BÌ
                 const envelopeParts = document.querySelectorAll('.layer-back, .layer-liner, .layer-front, .layer-flap');
                 envelopeParts.forEach(part => {
                     part.style.transition = '';
@@ -905,11 +925,11 @@
             function finish() {
                 stage.style.pointerEvents = 'none';
 
-                // Hiển thị trang chứa
+                // Hiển thị
                 page.style.display = 'flex';
                 page.classList.add('visible');
 
-                // Làm mờ CHỈ PHONG BÌ
+                // Làm mờ
                 const envelopeParts = document.querySelectorAll('.layer-back, .layer-liner, .layer-front, .layer-flap');
                 envelopeParts.forEach(part => {
                     part.style.transition = 'opacity 0.5s ease';
@@ -923,7 +943,7 @@
                     ctrls.style.display = 'flex';
                 }, 500));
 
-                // 4. Dọn dẹp
+                // Dọn dẹp
                 timers.push(setTimeout(() => {
                     stage.classList.add('hidden');
                 }, 700));
@@ -934,7 +954,7 @@
                 envGroup.style.opacity = '1';
                 stage.style.pointerEvents = 'auto';
 
-                // Xóa inline CSS để hiệu ứng chạy
+                // Xóa những cấu hình inline CSS 
                 setTimeout(() => {
                     flap.style.transform = '';
                     flap.style.zIndex = '';
@@ -949,7 +969,7 @@
                         card.classList.add('animate');
                     }, 500));
 
-                    // Đoạn cuối (3.5s + 0.5s = 4.0s)
+                    // Cuối
                     timers.push(setTimeout(finish, 4000));
                 }, 50);
             }
@@ -964,12 +984,12 @@
                 finish();
             });
 
-            // Xoay mặt sau của thiệp
+            // Xoay lại thành mặt sau
             document.getElementById('btn-flip').addEventListener('click', () => {
                 flipper.classList.toggle('flipped');
             });
 
-            // KIỂM TRA MÁY CHỦ RSVP
+            // RSVP 
             const modal = document.getElementById('rsvp-modal');
             const inputName = document.getElementById('rsvp-input');
             const interactiveArea = document.getElementById('rsvp-interactive-area');
@@ -1046,7 +1066,7 @@
             // Tắt chuột phải
             document.addEventListener('contextmenu', e => e.preventDefault());
 
-            // Bản Đồ -> Lặp (2 giây = 1 vòng)
+            // Bản Đồ -> Lặp
             function updateJourneyMap() {
                 const path = document.getElementById('route-path');
                 const activeRoute = document.getElementById('active-route');
@@ -1066,7 +1086,7 @@
 
                 const diffDays = totalSimMs / (1000 * 60 * 60 * 24);
                 const totalCycles = diffDays / 14;
-                // 2 giây cho mỗi vòng (mỗi lượt)
+                // 2 giây
                 const animDuration = totalCycles * 2000;
 
                 let startTime = null;
@@ -1119,7 +1139,7 @@
                     if (p < 1) {
                         requestAnimationFrame(step);
                     } else {
-                        // Loop
+                        // Lặp
                         setTimeout(() => { startTime = null; requestAnimationFrame(step); }, 3000);
                     }
                 }
