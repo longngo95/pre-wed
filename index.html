@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title> Thiệp mời Lễ Báo Hỷ - Nhung & Long</title>
-    <meta name="description" content="">
+    <title>Trân trọng kính mời - Nhung & Long</title>
+    <meta name="description" content="Thiệp mời đám cưới của Nhung & Long">
     <link rel="icon" href="assets/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
@@ -400,8 +400,56 @@
             margin-top: 4px;
         }
 
+        .details-layout {
+            width: 100%;
+            max-width: 1320px;
+            margin: 30px auto 0;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 20px;
+            justify-items: center;
+        }
+
+        .details-layout .event-info,
+        .details-layout .journey-section,
+        .details-layout .rsvp-panel {
+            width: 100%;
+            margin: 0;
+        }
+
+        .rsvp-panel {
+            max-width: 420px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 35px 28px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(184, 134, 11, 0.15);
+            text-align: center;
+        }
+
+        .rsvp-panel .event-section {
+            margin-bottom: 0;
+        }
+
+        .rsvp-panel .event-section:last-of-type {
+            border-bottom: 1px solid rgba(184, 134, 11, 0.15);
+            margin-bottom: 0;
+            padding-bottom: 20px;
+        }
+
+        .rsvp-note {
+            max-width: 340px;
+            margin: 22px auto 18px;
+            font-family: 'Great Vibes', cursive;
+            font-size: 30px;
+            line-height: 1.25;
+            color: var(--gold);
+        }
+
         .rsvp-section {
-            margin-top: 30px;
+            margin-top: 24px;
             display: flex;
             gap: 10px;
             width: 100%;
@@ -614,6 +662,51 @@
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
         }
 
+        @media (min-width: 981px) {
+            .details-layout {
+                grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+                gap: 24px;
+                align-items: start;
+                justify-items: stretch;
+            }
+
+            .details-layout .journey-section,
+            .details-layout .event-info,
+            .details-layout .rsvp-panel {
+                max-width: none;
+                width: 100%;
+                margin: 0;
+            }
+
+            .details-layout .journey-section {
+                order: 1;
+            }
+
+            .details-layout .event-info {
+                order: 2;
+            }
+
+            .details-layout .rsvp-panel {
+                order: 3;
+            }
+
+            .rsvp-panel {
+                padding: 30px 24px;
+            }
+
+            .rsvp-panel .event-title {
+                margin-bottom: 18px;
+            }
+
+            .rsvp-panel .event-section:last-of-type {
+                padding-bottom: 18px;
+            }
+
+            .rsvp-section {
+                margin-top: 20px;
+            }
+        }
+
         .journey-media {
             flex: 1.1;
             /* Cho phần hiển thị video rộng hơn một chút */
@@ -716,6 +809,17 @@
         }
 
         @media (max-width: 480px) {
+            .details-layout {
+                gap: 16px;
+                margin-top: 24px;
+            }
+
+            .event-info,
+            .journey-section,
+            .rsvp-panel {
+                padding: 28px 20px;
+            }
+
             .envelope-group {
                 width: min(82vw, 400px);
             }
@@ -724,9 +828,29 @@
                 font-size: 24px;
             }
 
+            .event-title,
+            .rsvp-note {
+                font-size: 26px;
+                line-height: 1.22;
+            }
+
+            .event-title {
+                margin-bottom: 18px;
+            }
+
+            .rsvp-note {
+                max-width: 100%;
+                margin: 18px auto 16px;
+            }
+
+            .rsvp-section {
+                margin-top: 18px;
+                flex-direction: column;
+            }
+
             .rsvp-trigger {
                 font-size: 11px;
-                padding: 12px 2px;
+                padding: 12px 10px;
                 letter-spacing: 0.5px;
             }
         }
@@ -768,78 +892,81 @@
                 <div class="card-face card-back-face">
                     <img src="assets/card_back.jpg" alt="Back">
                     <div class="card-back-text">
-                        Mọi yêu thương xin gửi về Bii<br>
+                        Mọi yêu thương xin gửi về<br>
+                        <span style="font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: bold; color: #555; text-shadow: none;">토스뱅크 (Toss)<br>
+                        <span class="bank-copyable" id="card-bank-text" title="Nhấn để copy">1001-1608-3660</span></span>
                     </div>
                 </div>
             </div>
         </div>
         <button class="flip-btn" id="btn-flip">↻ Lật mặt sau</button>
-        <div class="event-info">
-            <div class="event-title">Trân trọng kính mời</div>
-            <div class="event-section">
-                <div class="event-label">Thời gian</div>
-                <div class="event-value">11 giờ trưa, Chủ Nhật, Ngày 17 Tháng 5</div>
-            </div>
-            <div class="event-section">
-                <div class="event-label">Địa Chỉ</div>
-                <div class="event-value">Quán Phố Cổ</div>
-                <div class="event-value sub address-copyable" id="address-text" title="Nhấn để copy">전북특별자치도 전주시 덕진구
-                    명륜4길 10-4 2층</div>
-            </div>
-        </div>
-
-        <!-- PHẦN HÀNH TRÌNH (Video + Bản Đồ) -->
-        <div class="journey-section">
-            <div class="journey-media">
-                <video src="assets/Video_1.mp4" autoplay loop muted playsinline class="journey-video"></video>
-            </div>
-            <div class="map-container">
-                <svg class="korea-map" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Mô phỏng đường bờ biển Hàn Quốc -->
-                    <polygon
-                        points="50,10 70,5 90,15 100,20 120,30 140,50 160,80 170,110 180,150 185,190 170,220 160,250 140,270 120,285 100,280 80,290 60,280 50,260 40,240 30,200 40,160 35,130 50,80"
-                        fill="#f0edd1" stroke="rgba(184, 134, 11, 0.4)" stroke-width="2" />
-                    <!-- Đảo Jeju -->
-                    <circle cx="60" cy="270" r="10" fill="#f0edd1" stroke="rgba(184, 134, 11, 0.4)" stroke-width="2" />
-                    <!-- Đường Vận Chuyển -->
-                    <path id="route-path" d="M75,60 Q110,120 90,180" fill="none" stroke="#ddd" stroke-width="3"
-                        stroke-dasharray="5,5" />
-                    <path id="active-route" d="M75,60 Q110,120 90,180" fill="none" stroke="var(--gold)" stroke-width="3"
-                        stroke-dasharray="150" stroke-dashoffset="150" />
-                    <!-- Các Điểm -->
-                    <circle cx="75" cy="60" r="6" fill="#fff" stroke="var(--gold)" stroke-width="2" />
-                    <circle cx="90" cy="180" r="6" fill="#fff" stroke="var(--gold)" stroke-width="2" />
-                    <!-- Tên Nhãn -->
-                    <text x="55" y="50" font-family="sans-serif" font-size="11" fill="var(--dark)" font-weight="bold">서울
-                        (Seoul)</text>
-                    <text x="100" y="195" font-family="sans-serif" font-size="11" fill="var(--dark)"
-                        font-weight="bold">전주 (Jeonju)</text>
-                    <!-- Điểm Chạy Đánh Dấu -->
-                    <g id="map-marker" transform="translate(75,60)">
-                        <text x="-12" y="6" font-size="18">🚞</text>
-                    </g>
-                </svg>
-                <div class="journey-stats">
-                    <div class="stat-date" id="journey-date">📅 07/03/2025</div>
-                    <div class="distance-counter">
-                        <span style="font-size:16px;">💖</span> <span id="distance-val">0</span> km
+        <div class="details-layout">
+            <!-- PHẦN HÀNH TRÌNH (Video + Bản Đồ) -->
+            <div class="journey-section">
+                <div class="journey-media">
+                    <video src="assets/Video_1.mp4" autoplay loop muted playsinline class="journey-video"></video>
+                </div>
+                <div class="map-container">
+                    <svg class="korea-map" viewBox="0 0 200 315" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Mô phỏng đường bờ biển Hàn Quốc -->
+                        <polygon
+                            points="50,10 70,5 90,15 100,20 120,30 140,50 160,80 170,110 180,150 185,190 170,220 160,250 140,270 120,285 100,280 80,290 60,280 50,260 40,240 30,200 40,160 35,130 50,80"
+                            fill="#f0edd1" stroke="rgba(184, 134, 11, 0.4)" stroke-width="2" />
+                        <!-- Đảo Jeju -->
+                        <circle cx="60" cy="300" r="10" fill="#f0edd1" stroke="rgba(184, 134, 11, 0.4)" stroke-width="2" />
+                        <!-- Đường Vận Chuyển -->
+                        <path id="route-path" d="M75,60 Q110,120 90,180" fill="none" stroke="#ddd" stroke-width="3"
+                            stroke-dasharray="5,5" />
+                        <path id="active-route" d="M75,60 Q110,120 90,180" fill="none" stroke="var(--gold)" stroke-width="3"
+                            stroke-dasharray="150" stroke-dashoffset="150" />
+                        <!-- Các Điểm -->
+                        <circle cx="75" cy="60" r="6" fill="#fff" stroke="var(--gold)" stroke-width="2" />
+                        <circle cx="90" cy="180" r="6" fill="#fff" stroke="var(--gold)" stroke-width="2" />
+                        <!-- Tên Nhãn -->
+                        <text x="55" y="50" font-family="sans-serif" font-size="11" fill="var(--dark)" font-weight="bold">서울
+                            (Seoul)</text>
+                        <text x="100" y="195" font-family="sans-serif" font-size="11" fill="var(--dark)"
+                            font-weight="bold">전주 (Jeonju)</text>
+                        <!-- Điểm Chạy Đánh Dấu -->
+                        <g id="map-marker" transform="translate(75,60)">
+                            <text x="-12" y="6" font-size="18">🚞</text>
+                        </g>
+                    </svg>
+                    <div class="journey-stats">
+                        <div class="stat-date" id="journey-date">📅 07/03/2025</div>
+                        <div class="distance-counter">
+                            <span style="font-size:16px;">💖</span> <span id="distance-val">0</span> km
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- THÔNG TIN NGÂN HÀNG -->
-        <div class="event-info bank-info" style="margin: 20px auto 30px auto;">
-            <div class="event-title">Mọi yêu thương xin gửi về</div>
-            <div class="event-section">
-                <div class="event-label">토스뱅크 (Toss)</div>
-                <div class="event-value bank-copyable" id="page-bank-text" title="Nhấn để copy">1001-1608-3660</div>
+            <div class="event-info">
+                <div class="event-title">Trân trọng kính mời</div>
+                <div class="event-section">
+                    <div class="event-label">Thời gian</div>
+                    <div class="event-value">11 giờ trưa, Chủ Nhật, Ngày 17 Tháng 5</div>
+                </div>
+                <div class="event-section">
+                    <div class="event-label">Địa Chỉ</div>
+                    <div class="event-value">Quán Phố Cổ</div>
+                    <div class="event-value sub address-copyable" id="address-text" title="Nhấn để copy">전북특별자치도 전주시 덕진구
+                        명륜4길 10-4 2층</div>
+                </div>
             </div>
-        </div>
 
-        <div class="rsvp-section">
-            <button class="rsvp-trigger decline" id="btn-decline">Không thể tham dự</button>
-            <button class="rsvp-trigger" id="btn-attend">Sẽ tham dự</button>
+            <div class="rsvp-panel">
+                <div class="event-title">Mọi yêu thương xin gửi về</div>
+                <div class="event-section">
+                    <div class="event-label">토스뱅크 (Toss)</div>
+                    <div class="event-value bank-copyable" id="page-bank-text" title="Nhấn để copy">1001-1608-3660</div>
+                </div>
+                <div class="rsvp-note">Hãy xác nhận sự có mặt của bạn để chúng mình/em chuẩn bị đón tiếp một cách chu đáo nhất. Trân trọng!</div>
+                <div class="rsvp-section">
+                    <button class="rsvp-trigger decline" id="btn-decline">Không thể tham dự</button>
+                    <button class="rsvp-trigger" id="btn-attend">Sẽ tham dự</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1053,7 +1180,7 @@
                 });
             }
 
-            // Copy Bank (Card)
+            // Copy stk (Card)
             const cardBankEl = document.getElementById('card-bank-text');
             if (cardBankEl) {
                 cardBankEl.addEventListener('click', (e) => {
@@ -1070,7 +1197,7 @@
                 });
             }
 
-            // Copy Bank (Page)
+            // Copy stk
             const pageBankEl = document.getElementById('page-bank-text');
             if (pageBankEl) {
                 pageBankEl.addEventListener('click', () => {
