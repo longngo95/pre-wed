@@ -107,23 +107,94 @@
             opacity: 0;
         }
 
-        /* Mặt sau phong bì */
-        .layer-back {
+        /* Mặt trước phong bì */
+        .env-front {
             position: absolute;
             inset: 0;
-            background-color: #d6c9b0;
-            /* Màu túi hiển thị khi thiệp rút ra */
             background-image: url('assets/envelope.jpg');
             background-size: cover;
             border-radius: 6px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12), inset 0 0 20px rgba(0, 0, 0, 0.1);
+            backface-visibility: hidden;
             z-index: 10;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12), inset 0 2px 8px rgba(0, 0, 0, 0.06);
+            cursor: pointer;
+        }
+
+        /* Tên cặp đôi - góc trên bên trái */
+        .env-front-name {
+            position: absolute;
+            top: 12%;
+            left: 8%;
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(22px, 5.5vw, 34px);
+            color: var(--dark);
+            text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);
+        }
+
+        /* Tem thư - góc trên bên phải */
+        .env-front-stamp {
+            position: absolute;
+            top: 8%;
+            right: 6%;
+            width: clamp(48px, 14vw, 72px);
+            height: auto;
+            aspect-ratio: 1;
+            object-fit: contain;
+            border: 2px solid rgba(184, 134, 11, 0.3);
+            border-radius: 4px;
+            padding: 3px;
+            background: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            /* Hiệu ứng tem thư cổ điển */
+            filter: saturate(0.85);
+        }
+
+        /* Phần chữ chính giữa */
+        .env-front-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .env-front-invite {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(20px, 5vw, 30px);
+            color: var(--dark);
+            text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);
+        }
+
+        .env-front-sub {
+            font-size: clamp(12px, 3vw, 18px);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gold);
+        }
+
+        /* Mặt sau phong bì */
+        .env-back {
+            position: absolute;
+            inset: 0;
+            transform: rotateY(180deg);
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+            z-index: 5;
+            border-radius: 6px;
+            /* Màu nền giấy - chỉ lộ qua khe giữa các nắp */
+            background-color: #e8ddd0;
+            background-image: url('assets/envelope.jpg');
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
         }
 
         /* Lót trong */
         .layer-liner {
             position: absolute;
-            /* Thụt vào 10px để lộ viền giấy phong bì quanh lớp lót vàng */
             top: 10px;
             left: 10px;
             right: 10px;
@@ -131,7 +202,7 @@
             background-image: url('assets/liner.jpg');
             background-size: cover;
             background-position: center;
-            z-index: 20;
+            z-index: 10;
             border-radius: 4px;
         }
 
@@ -140,13 +211,12 @@
             position: absolute;
             left: 50%;
             top: 50%;
-            /* Chiều rộng thiệp khớp khít */
             width: min(80vw, 380px);
             aspect-ratio: 366 / 512;
             transform-origin: center center;
-            z-index: 30;
-            /* Bắt đầu */
-            transform: translate(-50%, -50%) scale(0.55) rotate(-90deg);
+            z-index: 15;
+            /* Bắt đầu nằm bên trong */
+            transform: translate(-50%, -50%) scale(0.55) rotate(-90deg) translateZ(0px);
         }
 
         .layer-card img {
@@ -154,138 +224,179 @@
             height: 100%;
             object-fit: cover;
             border-radius: 6px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            /* Đổ bóng nhỏ  */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
             transition: box-shadow 2.2s ease-out;
         }
 
-        /* Đổ bóng lớn dần khi thiệp tiến lại*/
-        .layer-card.animate img {
+        .envelope-group.open .layer-card img {
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
-            /* Bóng mờ */
         }
 
-        /* Hiệu ứng thiệp */
-        .layer-card.animate {
-            animation: cardSlideOut 3.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        /* Nắp gập */
+        .flap {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
         }
 
-        @keyframes cardSlideOut {
+        .flap-diamond {
+            position: absolute;
+            background-image: url('assets/envelope.jpg');
+            background-size: cover;
+            background-position: center;
+            /* Không dùng inset shadow - giữ texture đồng đều với env-back */
+        }
+
+        /* Nắp trên và dưới: scale theo chiều rộng */
+        .flap-top .flap-diamond,
+        .flap-bottom .flap-diamond {
+            width: 70.96%;
+            aspect-ratio: 1;
+        }
+
+        /* Nắp trái và phải: scale theo chiều cao */
+        .flap-left .flap-diamond,
+        .flap-right .flap-diamond {
+            height: 70.96%;
+            aspect-ratio: 1;
+        }
+
+        .flap-top {
+            z-index: 30;
+            transform-origin: top center;
+        }
+
+        .flap-top .flap-diamond {
+            transform-origin: top left;
+            transform: rotate(-45deg);
+            border-bottom-left-radius: 50px;
+            border-top-left-radius: 12px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .flap-top .flap-diamond.liner {
+            background-image: url('assets/liner.jpg');
+            background-size: cover;
+            background-position: center;
+            /*
+              Scale 0.88 từ top-left dịch tâm từ (50%,50%) về (44%,44%).
+              Cần translate(6%,6%) trong hệ toạ độ đã xoay để căn giữa lại.
+              CSS áp dụng phải→trái: scale → translate → rotate.
+            */
+            transform-origin: top left;
+            transform: rotate(-45deg) translate(6%, 6%) scale(0.88);
+            box-shadow: none;
+            opacity: 0;
+        }
+
+        .flap-bottom {
+            z-index: 24;
+        }
+
+        .flap-bottom .flap-diamond {
+            transform-origin: left bottom;
+            transform: rotate(45deg) translate(-3%, -3%);
+            border-top-left-radius: 100px;
+            border-bottom-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .flap-left {
+            z-index: 23;
+        }
+
+        .flap-left .flap-diamond {
+            transform-origin: top left;
+            transform: rotate(45deg);
+            border-top-left-radius: 20px;
+            border-bottom-right-radius: 30px;
+            border-top-right-radius: 5px;
+            top: -1.5%;
+        }
+
+        .flap-right {
+            z-index: 22;
+        }
+
+        .flap-right .flap-diamond {
+            right: 0;
+            transform-origin: top right;
+            transform: rotate(-45deg);
+            border-top-right-radius: 20px;
+            border-bottom-left-radius: 30px;
+            border-top-left-radius: 5px;
+            top: -1.5%;
+        }
+
+        /* HIỆU ỨNG ANIMATION */
+        .envelope-group.open {
+            animation: flip-center 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .envelope-group.open .flap-top {
+            animation: flap-open 0.6s 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .envelope-group.open .flap-top .flap-diamond.liner {
+            animation: liner-reveal 0.6s 0.8s forwards;
+        }
+
+        .envelope-group.open .layer-card {
+            animation: letter-reveal 2.2s 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes flip-center {
+            0% {
+                transform: rotateY(0);
+            }
+
+            100% {
+                transform: rotateY(180deg);
+            }
+        }
+
+        @keyframes flap-open {
+            0% {
+                transform: rotateX(0deg);
+                z-index: 30;
+            }
+
+            100% {
+                transform: rotateX(180deg);
+                z-index: 10;
+            }
+        }
+
+        @keyframes liner-reveal {
+
+            0%,
+            49.9% {
+                opacity: 0;
+            }
+
+            50%,
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes letter-reveal {
             0% {
                 transform: translate(-50%, -50%) scale(0.55) rotate(-90deg) translateZ(0px);
             }
 
-            /* Trượt thiệp VỀ PHÍA TRƯỚC (translateZ) khi rút khỏi túi để không bị cắt */
-            45% {
-                transform: translate(-50%, -125%) scale(0.7) rotate(0deg) translateZ(50px);
-            }
-
-            100% {
-                /* Vị trí cuối cùng là tỷ lệ 1.0 để khớp với thiệp trên trang */
-                transform: translate(-50%, -50%) scale(1) rotate(0deg) translateZ(120px);
-            }
-        }
-
-        /* Mặt trước*/
-        .layer-front {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 75%;
-            /* Cao hơn một chút */
-            background-image: url('assets/envelope.jpg');
-            background-size: cover;
-            z-index: 45;
-            /* Phải nằm trên lớp thiệp (30) */
-            clip-path: polygon(0% 0%, 15% 10%, 85% 10%, 100% 0%, 100% 100%, 0% 100%);
-        }
-
-        /* Nắp phong bì */
-        .layer-flap {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 60%;
-            /* Kéo dài xuống sâu hơn */
-            transform-origin: top center;
-            z-index: 50;
-            /* Lớp trên cùng*/
-        }
-
-        .layer-flap.animate {
-            animation: flapOpen 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
-        @keyframes flapOpen {
-            0% {
-                transform: rotateX(0deg);
-                z-index: 50;
-            }
-
-            49% {
-                transform: rotateX(-89deg);
-                z-index: 50;
+            35% {
+                transform: translate(-50%, -150%) scale(0.55) rotate(-90deg) translateZ(0px);
             }
 
             50% {
-                transform: rotateX(-90deg);
-                z-index: 5;
+                transform: translate(-50%, -150%) scale(0.7) rotate(0deg) translateZ(60px);
             }
 
-            /* Đảo trục Z tại góc 90 độ */
             100% {
-                transform: rotateX(-180deg);
-                z-index: 5;
+                transform: translate(-50%, -50%) scale(1) rotate(0deg) translateZ(120px);
             }
-        }
-
-        .flap-outer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('assets/envelope.jpg');
-            background-size: cover;
-            /* Hình thang */
-            clip-path: polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%);
-            backface-visibility: hidden;
-            /* Giả lập độ dày giấy / ánh sáng */
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        /* Mặt trong */
-        .flap-inner {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            transform: rotateX(180deg);
-        }
-
-        .flap-inner-paper {
-            position: absolute;
-            inset: 0;
-            background-image: url('assets/envelope.jpg');
-            background-size: cover;
-            clip-path: polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%);
-        }
-
-        .flap-inner-gold {
-            position: absolute;
-            top: 4%;
-            left: 5%;
-            right: 5%;
-            bottom: 8%;
-            /* Cùng hình ảnh + kích thước với lớp lót để tạo độ liền mạch */
-            background-image: url('assets/liner.jpg');
-            background-size: cover;
-            background-position: center;
-            clip-path: polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%);
         }
 
         /* ===========
@@ -818,14 +929,16 @@
             border-color: var(--gold);
         }
 
-        .address-copyable, .bank-copyable {
+        .address-copyable,
+        .bank-copyable {
             cursor: pointer;
             transition: color 0.2s, transform 0.2s;
             position: relative;
             display: inline-block;
         }
 
-        .address-copyable:active, .bank-copyable:active {
+        .address-copyable:active,
+        .bank-copyable:active {
             color: var(--gold);
             transform: scale(0.98);
         }
@@ -885,22 +998,44 @@
     <!-- KHUNG -->
     <div id="stage">
         <div class="envelope-group" id="envelope-group">
-            <!-- Mặt sau phong bì -->
-            <div class="layer-back"></div>
-            <!-- Giấy lót -->
-            <div class="layer-liner"></div>
-            <!-- Tấm thiệp -->
-            <div class="layer-card" id="layer-card">
-                <img src="assets/card_front.png" alt="Card">
+            <!-- Mặt trước phong bì -->
+            <div class="env-front" id="env-front">
+                <!-- Tên cặp đôi - góc trên trái -->
+                <div class="env-front-name">Nhung & Long</div>
+                <!-- Tem thư - góc trên phải -->
+                <img class="env-front-stamp" src="assets/favicon.png" alt="Stamp">
+                <!-- Lời mời - chính giữa -->
+                <div class="env-front-center">
+                    <div class="env-front-invite">Trân trọng kính mời</div>
+                    <div class="env-front-sub">Nhấn để mở</div>
+                </div>
             </div>
-            <!-- Lớp giấy mặt ngoài -->
-            <div class="layer-front"></div>
-            <!-- Nắp gập -->
-            <div class="layer-flap" id="layer-flap">
-                <div class="flap-outer"></div>
-                <div class="flap-inner">
-                    <div class="flap-inner-paper"></div>
-                    <div class="flap-inner-gold"></div>
+
+            <!-- Mặt sau phong bì (với nắp gập và thiệp) -->
+            <div class="env-back">
+                <!-- Giấy lót -->
+                <div class="layer-liner"></div>
+
+                <!-- Tấm thiệp -->
+                <div class="layer-card" id="layer-card">
+                    <img src="assets/card_front.png" alt="Card">
+                </div>
+
+                <!-- Các nắp gập tĩnh (trái, phải, dưới) -->
+                <div class="flap flap-bottom">
+                    <div class="flap-diamond"></div>
+                </div>
+                <div class="flap flap-left">
+                    <div class="flap-diamond"></div>
+                </div>
+                <div class="flap flap-right">
+                    <div class="flap-diamond"></div>
+                </div>
+
+                <!-- Nắp gập trên (chuyển động) -->
+                <div class="flap flap-top" id="layer-flap">
+                    <div class="flap-diamond"></div>
+                    <div class="flap-diamond liner"></div>
                 </div>
             </div>
         </div>
@@ -915,8 +1050,11 @@
                     <img src="assets/card_back.jpg" alt="Back">
                     <div class="card-back-text">
                         Mọi yêu thương xin gửi về<br>
-                        <span style="font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: bold; color: #555; text-shadow: none;">토스뱅크 (Toss)<br>
-                        <span class="bank-copyable" id="card-bank-text" title="Nhấn để copy">1001-1608-3660</span></span>
+                        <span
+                            style="font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: bold; color: #555; text-shadow: none;">토스뱅크
+                            (Toss)<br>
+                            <span class="bank-copyable" id="card-bank-text"
+                                title="Nhấn để copy">1001-1608-3660</span></span>
                     </div>
                 </div>
             </div>
@@ -935,17 +1073,19 @@
                             points="50,10 70,5 90,15 100,20 120,30 140,50 160,80 170,110 180,150 185,190 170,220 160,250 140,270 120,285 100,280 80,290 60,280 50,260 40,240 30,200 40,160 35,130 50,80"
                             fill="#f0edd1" stroke="rgba(184, 134, 11, 0.4)" stroke-width="2" />
                         <!-- Đảo Jeju -->
-                        <circle cx="60" cy="300" r="10" fill="#f0edd1" stroke="rgba(184, 134, 11, 0.4)" stroke-width="2" />
+                        <circle cx="60" cy="300" r="10" fill="#f0edd1" stroke="rgba(184, 134, 11, 0.4)"
+                            stroke-width="2" />
                         <!-- Đường Vận Chuyển -->
                         <path id="route-path" d="M75,60 Q110,120 90,180" fill="none" stroke="#ddd" stroke-width="3"
                             stroke-dasharray="5,5" />
-                        <path id="active-route" d="M75,60 Q110,120 90,180" fill="none" stroke="var(--gold)" stroke-width="3"
-                            stroke-dasharray="150" stroke-dashoffset="150" />
+                        <path id="active-route" d="M75,60 Q110,120 90,180" fill="none" stroke="var(--gold)"
+                            stroke-width="3" stroke-dasharray="150" stroke-dashoffset="150" />
                         <!-- Các Điểm -->
                         <circle cx="75" cy="60" r="6" fill="#fff" stroke="var(--gold)" stroke-width="2" />
                         <circle cx="90" cy="180" r="6" fill="#fff" stroke="var(--gold)" stroke-width="2" />
                         <!-- Tên Nhãn -->
-                        <text x="55" y="50" font-family="sans-serif" font-size="11" fill="var(--dark)" font-weight="bold">서울
+                        <text x="55" y="50" font-family="sans-serif" font-size="11" fill="var(--dark)"
+                            font-weight="bold">서울
                             (Seoul)</text>
                         <text x="100" y="195" font-family="sans-serif" font-size="11" fill="var(--dark)"
                             font-weight="bold">전주 (Jeonju)</text>
@@ -983,7 +1123,8 @@
                     <div class="event-label">토스뱅크 (Toss)</div>
                     <div class="event-value bank-copyable" id="page-bank-text" title="Nhấn để copy">1001-1608-3660</div>
                 </div>
-                <div class="rsvp-note">Hãy xác nhận sự có mặt của bạn/anh/chị để chúng mình/em chuẩn bị đón tiếp một cách chu đáo nhất. Trân trọng!</div>
+                <div class="rsvp-note">Hãy xác nhận sự có mặt của bạn/anh/chị để chúng mình/em chuẩn bị đón tiếp một
+                    cách chu đáo nhất. Trân trọng!</div>
                 <div class="rsvp-section">
                     <button class="rsvp-trigger decline" id="btn-decline">Không thể tham dự</button>
                     <button class="rsvp-trigger" id="btn-attend">Sẽ tham dự</button>
@@ -1036,31 +1177,41 @@
                 stage.style.display = '';
                 stage.style.opacity = '1';
 
-                // ĐẶT LẠI ĐỘ TRONG SUỐT CHO PHONG BÌ
-                const envelopeParts = document.querySelectorAll('.layer-back, .layer-liner, .layer-front, .layer-flap');
+                // ĐẶT LẠI ĐỘ TRONG SUỐT
+                const envelopeParts = document.querySelectorAll('.env-front, .env-back, .layer-liner, .flap, .flap-diamond');
                 envelopeParts.forEach(part => {
                     part.style.transition = '';
-                    part.style.opacity = '1';
+                    part.style.opacity = '';
                 });
 
-                envGroup.classList.remove('settle');
-                flap.classList.remove('animate');
-                flap.style.transform = 'rotateX(0deg)';
-                flap.style.zIndex = '50';
+                // Xóa class open để dừng animation
+                envGroup.classList.remove('settle', 'open');
 
-                card.classList.remove('animate');
+                // Xóa animation inline trên tất cả phần tử animated
+                // để trình duyệt reset CSS animation khi thêm lại class open
+                const flapTop = document.getElementById('layer-flap');
+                const linerDiamond = document.querySelector('.flap-diamond.liner');
+                [envGroup, flapTop, card, linerDiamond].forEach(el => {
+                    if (el) el.style.animation = 'none';
+                });
+
+                // Ép reflow để trình duyệt thực sự reset
+                void envGroup.offsetWidth;
+
+                // Xóa animation inline để cho CSS class kiểm soát lại
+                [envGroup, flapTop, card, linerDiamond].forEach(el => {
+                    if (el) el.style.animation = '';
+                });
+
+                // Reset card opacity và transform
                 card.style.opacity = '1';
-                card.style.transform = 'translate(-50%, -50%) scale(0.55) rotate(-90deg)';
+                card.style.transform = '';
 
                 page.classList.remove('visible');
                 page.style.opacity = '0';
                 page.style.display = 'none';
                 flipper.classList.remove('flipped');
                 window.scrollTo(0, 0);
-
-                // Ép trình duyệt tính toán lại giao diện
-                void flap.offsetWidth;
-                void card.offsetWidth;
             }
 
             function finish() {
@@ -1070,8 +1221,8 @@
                 page.style.display = 'flex';
                 page.classList.add('visible');
 
-                // Làm mờ
-                const envelopeParts = document.querySelectorAll('.layer-back, .layer-liner, .layer-front, .layer-flap');
+                // Làm mờ phong bì
+                const envelopeParts = document.querySelectorAll('.env-front, .env-back, .layer-liner, .flap, .flap-diamond');
                 envelopeParts.forEach(part => {
                     part.style.transition = 'opacity 0.5s ease';
                     part.style.opacity = '0';
@@ -1090,36 +1241,36 @@
                 }, 700));
             }
 
+            let hasStarted = false;
+
             function play() {
                 reset();
                 envGroup.style.opacity = '1';
                 stage.style.pointerEvents = 'auto';
-
-                // Xóa những cấu hình inline CSS 
-                setTimeout(() => {
-                    flap.style.transform = '';
-                    flap.style.zIndex = '';
-                    card.style.transform = '';
-                    card.style.zIndex = '';
-
-                    // Đoạn A
-                    flap.classList.add('animate');
-
-                    // Đoạn B
-                    timers.push(setTimeout(() => {
-                        card.classList.add('animate');
-                    }, 500));
-
-                    // Cuối
-                    timers.push(setTimeout(finish, 4000));
-                }, 50);
+                hasStarted = false;
             }
 
+            function startAnimation() {
+                if (hasStarted) return;
+                hasStarted = true;
+                envGroup.classList.add('open');
+
+                // Tổng thời gian là 1.4s (chờ) + 2.2s (letter reveal) = 3.6s
+                // Gọi finish ở 4 giây cho mượt
+                timers.push(setTimeout(finish, 4000));
+            }
+
+            // Gọi play() ban đầu để thiết lập trạng thái ban đầu (hiện mặt trước)
             play();
+
+            document.getElementById('env-front').addEventListener('click', (e) => {
+                e.stopPropagation();
+                startAnimation();
+            });
 
             document.getElementById('btn-replay').addEventListener('click', play);
 
-            // Nhấn để bỏ qua
+            // Nhấn vào khung nền để bỏ qua
             stage.addEventListener('click', () => {
                 clearAll();
                 finish();
